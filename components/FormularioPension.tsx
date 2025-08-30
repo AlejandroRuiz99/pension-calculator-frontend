@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Calculator, AlertCircle, Info, HelpCircle } from 'lucide-react'
-import { FormularioPension, TipoJubilacion, Sexo, SolicitudPension } from '@/types/pension'
+import { type FormularioPension, TipoJubilacion, Sexo, SolicitudPension } from '@/types/pension'
 import { pensionApi } from '@/lib/api'
 import { 
   anosADias, 
