@@ -10,7 +10,7 @@ import { pensionApi } from '@/lib/api'
 import { 
   anosADias, 
   calcularEdad, 
-  validarAnosCotizados, 
+  validarDiasCotizados, 
   getFechaMinimaNacimiento,
   getFechaMaximaNacimiento,
   getFechaMinimaJubilacion,
@@ -22,8 +22,8 @@ import toast from 'react-hot-toast'
 const formularioSchema = z.object({
   fecha_nacimiento: z.string().min(1, 'Fecha de nacimiento requerida'),
   sexo: z.enum(['M', 'F'], { required_error: 'Sexo requerido' }),
-  anos_cotizados_total: z.number().min(0, 'Debe ser mayor a 0').max(50, 'Máximo 50 años'),
-  anos_cotizados_ultimos_15: z.number().min(0, 'Debe ser mayor a 0').max(15, 'Máximo 15 años'),
+  dias_cotizados_total: z.number().min(0, 'Debe ser mayor a 0').max(18250, 'Máximo 18,250 días (50 años)'),
+  dias_cotizados_ultimos_15: z.number().min(0, 'Debe ser mayor a 0').max(5475, 'Máximo 5,475 días (15 años)'),
   base_reguladora: z.number().min(1, 'Debe ser mayor a 0').max(10000, 'Máximo €10,000'),
   otras_rentas_anuales: z.number().min(0, 'Debe ser 0 o mayor'),
   fecha_jubilacion_deseada: z.string().min(1, 'Fecha de jubilación requerida'),
@@ -43,7 +43,7 @@ const formularioSchema = z.object({
 })
 
 interface Props {
-  onSimulacion: (resultado: any) => void
+  onSimulacion: (resultado: any, datosFormulario: FormularioPension) => void
   loading?: boolean
   disabled?: boolean
 }
@@ -72,19 +72,19 @@ export default function FormularioPension({ onSimulacion, loading = false, disab
 
   const tipoJubilacion = watch('tipo_jubilacion')
   const fechaNacimiento = watch('fecha_nacimiento')
-  const anosTotal = watch('anos_cotizados_total')
-  const anosUltimos15 = watch('anos_cotizados_ultimos_15')
+  const diasTotal = watch('dias_cotizados_total')
+  const diasUltimos15 = watch('dias_cotizados_ultimos_15')
 
   // Validaciones dinámicas
   useEffect(() => {
-    if (fechaNacimiento && anosTotal && anosUltimos15) {
+    if (fechaNacimiento && diasTotal && diasUltimos15) {
       const edad = calcularEdad(fechaNacimiento)
-      const errorValidacion = validarAnosCotizados(anosTotal, anosUltimos15, edad)
+      const errorValidacion = validarDiasCotizados(diasTotal, diasUltimos15, edad)
       if (errorValidacion) {
         toast.error(errorValidacion)
       }
     }
-  }, [fechaNacimiento, anosTotal, anosUltimos15])
+  }, [fechaNacimiento, diasTotal, diasUltimos15])
 
   const onSubmit = async (data: FormularioPension) => {
     setLoadingSubmit(true)
@@ -95,8 +95,8 @@ export default function FormularioPension({ onSimulacion, loading = false, disab
         fecha_nacimiento: data.fecha_nacimiento,
         fecha_jubilacion_deseada: data.fecha_jubilacion_deseada,
         sexo: data.sexo,
-        carencia_generica: anosADias(data.anos_cotizados_total),
-        carencia_especifica: anosADias(data.anos_cotizados_ultimos_15),
+        carencia_generica: data.dias_cotizados_total,
+        carencia_especifica: data.dias_cotizados_ultimos_15,
         base_reguladora: data.base_reguladora,
         tipo_jubilacion: data.tipo_jubilacion,
         otras_rentas_anuales: data.otras_rentas_anuales,
@@ -124,7 +124,7 @@ export default function FormularioPension({ onSimulacion, loading = false, disab
       const resultado = await pensionApi.simularPension(solicitud)
       
       toast.success('Simulación completada correctamente')
-      onSimulacion(resultado)
+      onSimulacion(resultado, data)
       
     } catch (error: any) {
       toast.error(error.message || 'Error al procesar la simulación')
@@ -209,45 +209,45 @@ export default function FormularioPension({ onSimulacion, loading = false, disab
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="form-field">
             <label className="form-label flex items-center">
-              Años Cotizados (Total)
+              Días Cotizados (Total)
               <HelpTooltip 
-                field="anos_total" 
-                content="Total de años cotizados a la Seguridad Social a lo largo de toda su vida laboral" 
+                field="dias_total" 
+                content="Total de días cotizados a la Seguridad Social a lo largo de toda su vida laboral" 
               />
             </label>
             <input
               type="number"
-              step="0.1"
+              step="1"
               min="0"
-              max="50"
-              {...register('anos_cotizados_total', { valueAsNumber: true })}
+              max="18250"
+              {...register('dias_cotizados_total', { valueAsNumber: true })}
               className="form-input"
               disabled={disabled}
             />
-            {errors.anos_cotizados_total && (
-              <p className="form-error">{errors.anos_cotizados_total.message}</p>
+            {errors.dias_cotizados_total && (
+              <p className="form-error">{errors.dias_cotizados_total.message}</p>
             )}
           </div>
 
           <div className="form-field">
             <label className="form-label flex items-center">
-              Años Cotizados (Últimos 15)
+              Días Cotizados (Últimos 15 años)
               <HelpTooltip 
-                field="anos_ultimos15" 
-                content="Años cotizados en los últimos 15 años anteriores a la jubilación (máximo 15)" 
+                field="dias_ultimos15" 
+                content="Días cotizados en los últimos 15 años anteriores a la jubilación (máximo 5,475 días)" 
               />
             </label>
             <input
               type="number"
-              step="0.1"
+              step="1"
               min="0"
-              max="15"
-              {...register('anos_cotizados_ultimos_15', { valueAsNumber: true })}
+              max="5475"
+              {...register('dias_cotizados_ultimos_15', { valueAsNumber: true })}
               className="form-input"
               disabled={disabled}
             />
-            {errors.anos_cotizados_ultimos_15 && (
-              <p className="form-error">{errors.anos_cotizados_ultimos_15.message}</p>
+            {errors.dias_cotizados_ultimos_15 && (
+              <p className="form-error">{errors.dias_cotizados_ultimos_15.message}</p>
             )}
           </div>
 

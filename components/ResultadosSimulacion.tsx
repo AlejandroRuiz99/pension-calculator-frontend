@@ -2,37 +2,38 @@
 
 import { useState } from 'react'
 import { CheckCircle, XCircle, AlertTriangle, Download, RefreshCw, TrendingUp, TrendingDown, Info } from 'lucide-react'
-import { RespuestaSimulacion } from '@/types/pension'
-import { formatearEuros, formatearPorcentaje, getColorPorcentaje } from '@/utils/calculations'
+import { RespuestaSimulacion, FormularioPension } from '@/types/pension'
+import { formatearEuros, formatearPorcentaje, getColorPorcentaje, diasAAanos } from '@/utils/calculations'
 import { generarPDFResultados, DatosInforme } from '@/utils/pdf-generator'
 import toast from 'react-hot-toast'
 
 interface Props {
   resultado: RespuestaSimulacion
+  datosFormulario: FormularioPension
   onNuevaSimulacion: () => void
 }
 
-export default function ResultadosSimulacion({ resultado, onNuevaSimulacion }: Props) {
+export default function ResultadosSimulacion({ resultado, datosFormulario, onNuevaSimulacion }: Props) {
   const [generandoPDF, setGenerandoPDF] = useState(false)
 
   const handleDescargarPDF = async () => {
     setGenerandoPDF(true)
     
     try {
-      // Simular datos que tendríamos del formulario
-      // En una implementación real, estos datos vendrían del estado del formulario
+      // Usar los datos reales del formulario
       const datosInforme: DatosInforme = {
         simulacion: resultado,
         datosPersonales: {
-          fechaNacimiento: '1965-03-01', // Esto vendría del formulario
-          sexo: 'M',
-          tipoJubilacion: 'anticipada_voluntaria'
+          fechaNacimiento: datosFormulario.fecha_nacimiento,
+          sexo: datosFormulario.sexo,
+          tipoJubilacion: datosFormulario.tipo_jubilacion,
+          fechaJubilacion: datosFormulario.fecha_jubilacion_deseada
         },
         datosLaborales: {
-          anosTotal: resultado.anos_cotizados,
-          anosUltimos15: 15, // Esto vendría del formulario
-          baseReguladora: resultado.calculo?.pension_antes_topes || 0,
-          otrasRentas: 0
+          diasTotal: datosFormulario.dias_cotizados_total,
+          diasUltimos15: datosFormulario.dias_cotizados_ultimos_15,
+          baseReguladora: datosFormulario.base_reguladora,
+          otrasRentas: datosFormulario.otras_rentas_anuales
         }
       }
       

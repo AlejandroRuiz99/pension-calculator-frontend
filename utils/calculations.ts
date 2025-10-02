@@ -138,6 +138,23 @@ export const validarAnosCotizados = (
 }
 
 /**
+ * Valida que los días cotizados sean coherentes
+ */
+export const validarDiasCotizados = (
+  diasTotal: number, 
+  diasUltimos15: number, 
+  edadActual: number
+): string | null => {
+  if (diasTotal < 0) return 'Los días cotizados no pueden ser negativos'
+  if (diasUltimos15 < 0) return 'Los días en últimos 15 años no pueden ser negativos'
+  if (diasUltimos15 > 5475) return 'No se puede cotizar más de 5,475 días en los últimos 15 años'
+  if (diasUltimos15 > diasTotal) return 'Los días en últimos 15 años no pueden ser superiores al total'
+  if (diasTotal > (edadActual - 16) * 365) return 'No se puede cotizar más días que la edad laboral posible'
+  
+  return null
+}
+
+/**
  * Obtiene el color para un porcentaje (verde = bueno, rojo = malo)
  */
 export const getColorPorcentaje = (porcentaje: number): string => {

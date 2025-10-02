@@ -8,10 +8,11 @@ export interface DatosInforme {
     fechaNacimiento: string
     sexo: string
     tipoJubilacion: string
+    fechaJubilacion: string
   }
   datosLaborales: {
-    anosTotal: number
-    anosUltimos15: number
+    diasTotal: number
+    diasUltimos15: number
     baseReguladora: number
     otrasRentas: number
   }
@@ -77,7 +78,7 @@ export const generarPDFResultados = (datos: DatosInforme): void => {
   addText(`Fecha de nacimiento: ${new Date(datosPersonales.fechaNacimiento).toLocaleDateString('es-ES')}`)
   addText(`Sexo: ${datosPersonales.sexo === 'M' ? 'Masculino' : 'Femenino'}`)
   addText(`Edad actual: ${simulacion.edad_jubilacion_anos.toFixed(1)} años`)
-  addText(`Fecha de jubilación deseada: ${new Date(datosPersonales.fechaNacimiento).toLocaleDateString('es-ES')}`)
+  addText(`Fecha de jubilación deseada: ${new Date(datosPersonales.fechaJubilacion).toLocaleDateString('es-ES')}`)
   addText(`Tipo de jubilación: ${obtenerNombreTipoJubilacion(datosPersonales.tipoJubilacion)}`)
   
   yPos += 10
@@ -87,8 +88,8 @@ export const generarPDFResultados = (datos: DatosInforme): void => {
   addText('DATOS LABORALES', margenIzquierdo, 14, 'bold')
   addLine()
   
-  addText(`Años cotizados (total): ${datosLaborales.anosTotal} años`)
-  addText(`Años cotizados (últimos 15): ${datosLaborales.anosUltimos15} años`)
+  addText(`Días cotizados (total): ${datosLaborales.diasTotal} días (${(datosLaborales.diasTotal / 365).toFixed(1)} años)`)
+  addText(`Días cotizados (últimos 15 años): ${datosLaborales.diasUltimos15} días (${(datosLaborales.diasUltimos15 / 365).toFixed(1)} años)`)
   addText(`Base reguladora: ${formatearEuros(datosLaborales.baseReguladora)}`)
   if (datosLaborales.otrasRentas > 0) {
     addText(`Otras rentas anuales: ${formatearEuros(datosLaborales.otrasRentas)}`)

@@ -5,12 +5,13 @@ import { Calculator, FileText, CheckCircle, AlertCircle, Info } from 'lucide-rea
 import FormularioPension from '@/components/FormularioPension'
 import ResultadosSimulacion from '@/components/ResultadosSimulacion'
 import InformacionTipos from '@/components/InformacionTipos'
-import { RespuestaSimulacion } from '@/types/pension'
+import { RespuestaSimulacion, FormularioPension as FormularioPensionType } from '@/types/pension'
 import { pensionApi } from '@/lib/api'
 import toast from 'react-hot-toast'
 
 export default function HomePage() {
   const [resultado, setResultado] = useState<RespuestaSimulacion | null>(null)
+  const [datosFormulario, setDatosFormulario] = useState<FormularioPensionType | null>(null)
   const [loading, setLoading] = useState(false)
   const [mostrarInfo, setMostrarInfo] = useState(false)
   const [apiStatus, setApiStatus] = useState<'checking' | 'online' | 'offline'>('checking')
@@ -30,8 +31,9 @@ export default function HomePage() {
     checkApiStatus()
   }, [])
 
-  const handleSimulacion = async (resultado: RespuestaSimulacion) => {
+  const handleSimulacion = async (resultado: RespuestaSimulacion, datosFormulario: FormularioPensionType) => {
     setResultado(resultado)
+    setDatosFormulario(datosFormulario)
     
     // Scroll suave a los resultados
     setTimeout(() => {
@@ -44,6 +46,7 @@ export default function HomePage() {
 
   const handleNuevaSimulacion = () => {
     setResultado(null)
+    setDatosFormulario(null)
     // Scroll al inicio del formulario
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -143,10 +146,11 @@ export default function HomePage() {
       </div>
 
       {/* Resultados */}
-      {resultado && (
+      {resultado && datosFormulario && (
         <div id="resultados" className="animate-fade-in">
           <ResultadosSimulacion 
             resultado={resultado}
+            datosFormulario={datosFormulario}
             onNuevaSimulacion={handleNuevaSimulacion}
           />
         </div>

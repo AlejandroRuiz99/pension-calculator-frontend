@@ -81,8 +81,8 @@ export interface FormularioPension {
   sexo: Sexo
   
   // Datos laborales
-  anos_cotizados_total: number // Se convertirá a días
-  anos_cotizados_ultimos_15: number // Se convertirá a días
+  dias_cotizados_total: number // Días cotizados totales
+  dias_cotizados_ultimos_15: number // Días cotizados en últimos 15 años
   base_reguladora: number
   otras_rentas_anuales: number
   
