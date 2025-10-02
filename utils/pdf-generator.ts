@@ -145,6 +145,12 @@ export const generarPDFResultados = (datos: DatosInforme): void => {
     addText('Detalles del cálculo:', margenIzquierdo, 12, 'bold')
     yPos += 5
     
+    // Porcentaje total aplicable
+    const porcentajeTotal = (calculo.porcentaje_anos_cotizados * calculo.porcentaje_anticipacion_demora) / 100
+    addText(`• PORCENTAJE TOTAL APLICABLE: ${formatearPorcentaje(porcentajeTotal)}`, margenIzquierdo, 12, 'bold')
+    addText(`  (${formatearPorcentaje(calculo.porcentaje_anos_cotizados)} × ${formatearPorcentaje(calculo.porcentaje_anticipacion_demora)})`, margenIzquierdo + 5, 10)
+    yPos += 3
+    
     addText(`• Porcentaje por años cotizados: ${formatearPorcentaje(calculo.porcentaje_anos_cotizados)}`)
     addText(`• Porcentaje por anticipación/demora: ${formatearPorcentaje(calculo.porcentaje_anticipacion_demora)}`)
     addText(`• Pensión antes de topes: ${formatearEuros(calculo.pension_antes_topes)}`)

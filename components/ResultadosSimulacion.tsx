@@ -191,6 +191,19 @@ export default function ResultadosSimulacion({ resultado, datosFormulario, onNue
             </div>
           </div>
 
+          {/* Porcentaje total aplicable */}
+          <div className="bg-blue-50 rounded-lg p-4 mb-6 border border-blue-200">
+            <div className="text-center">
+              <h4 className="text-lg font-medium text-blue-800 mb-2">Porcentaje Total Aplicable</h4>
+              <p className="text-3xl font-bold text-blue-600">
+                {formatearPorcentaje((calculo.porcentaje_anos_cotizados * calculo.porcentaje_anticipacion_demora) / 100)}
+              </p>
+              <p className="text-sm text-blue-600 mt-1">
+                {formatearPorcentaje(calculo.porcentaje_anos_cotizados)} × {formatearPorcentaje(calculo.porcentaje_anticipacion_demora)} = {formatearPorcentaje((calculo.porcentaje_anos_cotizados * calculo.porcentaje_anticipacion_demora) / 100)}
+              </p>
+            </div>
+          </div>
+
           {/* Detalles del cálculo */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="metric-card">
