@@ -231,7 +231,7 @@ export const generarPDFResultados = (datos: DatosInforme): void => {
     
     // MARCA DE AGUA
     doc.setTextColor(240, 240, 240) // Gris muy claro
-    doc.setFontSize(30)
+    doc.setFontSize(26)
     doc.setFont('helvetica', 'bold')
     
     // Centrar la marca de agua
@@ -241,15 +241,15 @@ export const generarPDFResultados = (datos: DatosInforme): void => {
     const centerY = pageHeight / 2
     
     // Texto diagonal usando rotación simple
-    doc.text('COMPROMISO LEGAL', centerX, centerY - 20, {
+    doc.text('COMPROMISO LEGAL', centerX, centerY - 30, {
       angle: 45,
       align: 'center'
     })
-    doc.text('DESPACHO DE ABOGADOS', centerX, centerY, {
+    doc.text('DESPACHO DE ABOGADOS', centerX, centerY - 10, {
       angle: 45,
       align: 'center'
     })
-    doc.text('SIMULACIÓN ORIENTATIVA', centerX, centerY + 20, {
+    doc.text('SIMULACIÓN ORIENTATIVA', centerX, centerY + 30, {
       angle: 45,
       align: 'center'
     })
