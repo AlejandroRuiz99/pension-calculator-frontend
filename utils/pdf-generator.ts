@@ -241,15 +241,15 @@ export const generarPDFResultados = (datos: DatosInforme): void => {
     const centerY = pageHeight / 2
     
     // Texto diagonal usando rotación simple
-    doc.text('COMPROMISO LEGAL', centerX, centerY - 30, {
+    doc.text('COMPROMISO LEGAL', centerX, centerY - 40, {
       angle: 45,
       align: 'center'
     })
-    doc.text('DESPACHO DE ABOGADOS', centerX, centerY - 10, {
+    doc.text('DESPACHO DE ABOGADOS', centerX, centerY, {
       angle: 45,
       align: 'center'
     })
-    doc.text('SIMULACIÓN ORIENTATIVA', centerX, centerY + 30, {
+    doc.text('SIMULACIÓN ORIENTATIVA', centerX, centerY + 40, {
       angle: 45,
       align: 'center'
     })
