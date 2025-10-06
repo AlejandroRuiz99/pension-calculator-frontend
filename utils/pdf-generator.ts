@@ -63,6 +63,10 @@ export const generarPDFResultados = (datos: DatosInforme): void => {
   doc.setFont('helvetica', 'normal')
   doc.text('España - Sistema de Seguridad Social', margenIzquierdo, 35)
   
+  doc.setFontSize(10)
+  doc.setFont('helvetica', 'italic')
+  doc.text('Informe generado por: Compromiso Legal - Despacho de Abogados', 120, 35)
+  
   // Fecha del informe
   doc.setTextColor(0, 0, 0)
   yPos = 60
@@ -70,6 +74,19 @@ export const generarPDFResultados = (datos: DatosInforme): void => {
   addText(`Versión del sistema: ${simulacion.version_sistema}`, 140, 10)
   
   yPos = 80
+  
+  // INFORMACIÓN DEL DESPACHO
+  doc.setFillColor(240, 248, 255) // Azul muy claro
+  doc.rect(margenIzquierdo - 5, yPos - 5, 170, 35, 'F')
+  doc.setTextColor(30, 64, 175) // Azul oscuro
+  addText('📋 INFORME GENERADO POR COMPROMISO LEGAL', margenIzquierdo, 12, 'bold')
+  doc.setTextColor(55, 65, 81)
+  addText('Despacho de Abogados especializado en Derecho de la Seguridad Social.', margenIzquierdo, 10)
+  addText('Este documento es una simulación orientativa basada en la normativa vigente.', margenIzquierdo, 10)
+  addText('Para asesoramiento personalizado, contacte con nuestro despacho.', margenIzquierdo, 10)
+  
+  doc.setTextColor(0, 0, 0)
+  yPos += 15
   
   // DATOS PERSONALES
   addText('DATOS PERSONALES', margenIzquierdo, 14, 'bold')
@@ -207,21 +224,48 @@ export const generarPDFResultados = (datos: DatosInforme): void => {
     })
   }
   
-  // PIE DE PÁGINA
+  // MARCA DE AGUA Y PIE DE PÁGINA
   const totalPages = doc.getNumberOfPages()
   for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i)
+    
+    // MARCA DE AGUA
+    doc.setTextColor(240, 240, 240) // Gris muy claro
+    doc.setFontSize(30)
+    doc.setFont('helvetica', 'bold')
+    
+    // Centrar la marca de agua
+    const pageWidth = doc.internal.pageSize.width
+    const pageHeight = doc.internal.pageSize.height
+    const centerX = pageWidth / 2
+    const centerY = pageHeight / 2
+    
+    // Texto diagonal usando rotación simple
+    doc.text('COMPROMISO LEGAL', centerX, centerY - 20, {
+      angle: 45,
+      align: 'center'
+    })
+    doc.text('DESPACHO DE ABOGADOS', centerX, centerY, {
+      angle: 45,
+      align: 'center'
+    })
+    doc.text('SIMULACIÓN ORIENTATIVA', centerX, centerY + 20, {
+      angle: 45,
+      align: 'center'
+    })
+    
+    // PIE DE PÁGINA
     doc.setFontSize(8)
     doc.setTextColor(128, 128, 128)
-    doc.text('Simulador de Pensiones - España', margenIzquierdo, 290)
+    doc.text('Compromiso Legal - Despacho de Abogados', margenIzquierdo, 290)
     doc.text(`Página ${i} de ${totalPages}`, 180, 290)
-    doc.text('Este informe es orientativo y no constituye resolución administrativa', margenIzquierdo, 285)
+    doc.text('Este documento es una simulación orientativa generada por Compromiso Legal', margenIzquierdo, 285)
   }
   
   // Generar nombre del archivo
   const fechaActual = new Date().toISOString().split('T')[0]
   const tipoJub = datosPersonales.tipoJubilacion.replace('_', '-')
-  const nombreArchivo = `simulacion-pension-${tipoJub}-${fechaActual}.pdf`
+  const nombreArchivo = `compromiso-legal-simulacion-pension-${tipoJub}-${fechaActual}.pdf`
   
   // Descargar
   doc.save(nombreArchivo)
